@@ -60,3 +60,82 @@ def generate_pdf_report(prediction, analysis):
         200,
         10,
         txt=sanitize_text(f"Current Price: ${prediction['last_close']:.2f}"),
+        ln=True,
+    )
+    pdf.cell(
+        200,
+        10,
+        txt=sanitize_text(f"Predicted Price: ${prediction['predicted_price']:.2f}"),
+        ln=True,
+    )
+    pdf.cell(
+        200,
+        10,
+        txt=sanitize_text(
+            f"Predicted Change: {((prediction['predicted_price'] / prediction['last_close']) - 1) * 100:.1f}%"
+        ),
+        ln=True,
+    )
+    pdf.cell(
+        200,
+        10,
+        txt=sanitize_text(f"Prediction Date: {prediction['prediction_date']}"),
+        ln=True,
+    )
+
+    # Add technical indicators
+    pdf.cell(200, 10, txt=sanitize_text("Technical Indicators:"), ln=True)
+    pdf.cell(
+        200,
+        10,
+        txt=sanitize_text(
+            f"20-hour MA: ${prediction['technical_indicators']['ma20']:.2f}"
+        ),
+        ln=True,
+    )
+    pdf.cell(
+        200,
+        10,
+        txt=sanitize_text(
+            f"50-hour MA: ${prediction['technical_indicators']['ma50']:.2f}"
+        ),
+        ln=True,
+    )
+    pdf.cell(
+        200,
+        10,
+        txt=sanitize_text(f"RSI: {prediction['technical_indicators']['rsi']:.2f}"),
+        ln=True,
+    )
+
+    # Add market insight
+    pdf.cell(200, 10, txt=sanitize_text("Market Insight:"), ln=True)
+    pdf.cell(
+        200,
+        10,
+        txt=sanitize_text(f"Summary: {prediction['market_insight']['summary']}"),
+        ln=True,
+    )
+    pdf.cell(
+        200,
+        10,
+        txt=sanitize_text(f"Risk Level: {prediction['market_insight']['risk_level']}"),
+        ln=True,
+    )
+    pdf.cell(
+        200,
+        10,
+        txt=sanitize_text(
+            f"Recommendation: {prediction['market_insight']['recommendation']}"
+        ),
+        ln=True,
+    )
+
+    # Add candlestick pattern analysis
+    pdf.cell(200, 10, txt=sanitize_text("Candlestick Pattern Analysis:"), ln=True)
+    pdf.multi_cell(0, 10, txt=sanitize_text(analysis))
+
+    # Save the PDF
+    pdf_output = f"{prediction['ticker']}_analysis_report.pdf"
+    pdf.output(pdf_output)
+    return pdf_output
