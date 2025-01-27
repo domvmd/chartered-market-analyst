@@ -4,7 +4,7 @@ import numpy as np
 import streamlit as st
 
 def calculate_technical_indicators(df):
-    """Calculate technical indicators"""
+    """Calculate technical indicators including Bollinger Bands"""
     try:
         df["Close"] = pd.to_numeric(df["Close"])
         
@@ -23,6 +23,12 @@ def calculate_technical_indicators(df):
         loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
         rs = gain / loss
         df["RSI"] = 100 - (100 / (1 + rs))
+
+        # Bollinger Bands
+        df["Middle Band"] = df["Close"].rolling(window=20).mean()  # SMA 20
+        df["Std Dev"] = df["Close"].rolling(window=20).std()       # Standard Deviation
+        df["Upper Band"] = df["Middle Band"] + (2 * df["Std Dev"])  # Upper Band
+        df["Lower Band"] = df["Middle Band"] - (2 * df["Std Dev"])  # Lower Band
         
         return df
     except Exception as e:
