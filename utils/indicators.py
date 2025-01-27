@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
+#Cache the calculate_technical_indicators function
+@st.cache_data
 def calculate_technical_indicators(df):
     """Calculate technical indicators including Bollinger Bands"""
     try:
